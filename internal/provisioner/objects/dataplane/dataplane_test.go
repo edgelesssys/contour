@@ -313,6 +313,7 @@ func TestDesiredDaemonSet(t *testing.T) {
 	testEnvoyImage := "docker.io/envoyproxy/envoy:test"
 	testLogLevelArg := "--log-level debug"
 	testBaseIDArg := "--base-id 1"
+	testConcurrencyArg := "--concurrency 4"
 	testEnvoyMaxHeapSize := "--overload-max-heap=8000000000"
 	testEnvoyMaxDownstreamConn := "--overload-downstream-max-conn=42"
 
@@ -339,6 +340,8 @@ func TestDesiredDaemonSet(t *testing.T) {
 	}
 	// Change the Envoy base id to test --base-id 1
 	cntr.Spec.EnvoyBaseID = 1
+	// Change the Envoy concurrency to test --concurrency 4
+	cntr.Spec.EnvoyConcurrency = 4
 
 	cntr.Spec.EnvoyMaxHeapSizeBytes = 8000000000
 	cntr.Spec.EnvoyMaxDownstreamConnections = 42
@@ -347,6 +350,7 @@ func TestDesiredDaemonSet(t *testing.T) {
 	container := checkDaemonSetHasContainer(t, ds, EnvoyContainerName, true)
 	checkContainerHasArg(t, container, testLogLevelArg)
 	checkContainerHasArg(t, container, testBaseIDArg)
+	checkContainerHasArg(t, container, testConcurrencyArg)
 	checkContainerHasImage(t, container, testEnvoyImage)
 	checkContainerHasReadinessPort(t, container, 8002)
 
